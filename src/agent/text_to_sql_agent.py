@@ -1,7 +1,7 @@
 """Text-to-SQL agent for the clinical SDTM database.
 
-Sends the DB schema + a natural-language question to the configured LLM
-(NVIDIA Nemotron by default, or Groq - see `llm_config.py`), validates that the
+Sends the DB schema + a natural-language question to NVIDIA Nemotron (via
+NVIDIA NIM, see `llm_config.py`), validates that the
 returned SQL is a single read-only SELECT, executes it against a read-only
 SQLite connection and returns the SQL + results as markdown.
 """

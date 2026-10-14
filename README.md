@@ -7,11 +7,11 @@ An interactive clinical data review platform. It ingests CDISC SDTM data into a 
 - **Turnkey data:** synthetic SDTM datasets (DM, AE, CM, MH, LB, EX) from the PHUSE Test Data Factory, plus a pre-built SQLite database, are committed to the repo. Clone it and run.
 - **Reproducible pipeline:** scripts to re-download the source `.xpt` files and rebuild the database from scratch.
 - **Reviewer dashboard:** a Streamlit + Plotly UI with a top control bar (arm / subject / theme), demographic KPI cards, an AE-vs-EX Gantt timeline, and tabs for AE, Labs, Con-Meds and Medical History.
-- **Medical Reviewer AI Agent:** LangChain Text-to-SQL agent. It defaults to **NVIDIA Nemotron-3 Super 120B** (via NVIDIA AI Endpoints), with **Groq**, Ollama and OpenAI as alternative providers.
+- **Medical Reviewer AI Agent:** LangChain Text-to-SQL agent powered exclusively by **NVIDIA Nemotron-3 Super 120B** (`nvidia/nemotron-3-super-120b-a12b`) via NVIDIA NIM / AI Endpoints.
 
 ## Part of a Clinical AI Suite
 
-This project pairs with **[clinical-r-code-compliance-agent](https://github.com/)**. Together they cover two complementary steps of clinical trial quality assurance:
+This project pairs with **[clinical-r-code-compliance-agent](https://github.com/AI-FOB/clinical-r-code-compliance-agent)**. Together they cover two complementary steps of clinical trial quality assurance:
 
 | Project | Focus | Who uses it |
 |---|---|---|
@@ -38,7 +38,7 @@ clinical-trial-ai-patient-profile/
 |       \-- clinical_data.db # SQLite database (committed)
 |-- src/
 |   |-- agent/
-|   |   |-- llm_config.py        # LLM provider selection
+|   |   |-- llm_config.py        # NVIDIA NIM LLM client
 |   |   \-- text_to_sql_agent.py # Text-to-SQL agent
 |   \-- data_pipeline/
 |       |-- 01_download_phuse_data.py
@@ -60,7 +60,7 @@ pip install -r requirements.txt
 
 ### 2. Configuration
 
-API keys are read from a local `.env` file, which git ignores. Never commit real keys.
+The AI agent uses the NVIDIA API only. Your key is read from a local `.env` file, which git ignores. Never commit real keys.
 
 ```bash
 # macOS / Linux
@@ -69,27 +69,19 @@ cp .env.example .env
 Copy-Item .env.example .env
 ```
 
-Then open `.env` and set your provider and key:
+Then open `.env` and set your NVIDIA API key (free at https://build.nvidia.com):
 
 ```ini
-# Default: NVIDIA (free key at https://build.nvidia.com)
-LLM_PROVIDER=nvidia
-NVIDIA_API_KEY=nvapi-...
-
-# Or use Groq (key at https://console.groq.com)
-# LLM_PROVIDER=groq
-# GROQ_API_KEY=gsk_...
+NVIDIA_API_KEY=nvapi-your-key-here
+NVIDIA_MODEL=nvidia/nemotron-3-super-120b-a12b
 ```
 
-| Variable | Default | Notes |
+| Variable | Required | Default |
 |---|---|---|
-| `LLM_PROVIDER` | `nvidia` | `nvidia`, `groq`, `ollama`, or `openai` |
-| `NVIDIA_API_KEY` / `NVIDIA_MODEL` | — / `nvidia/nemotron-3-super-120b-a12b` | |
-| `GROQ_API_KEY` / `GROQ_MODEL` | — / `qwen-2.5-32b` | |
-| `OLLAMA_BASE_URL` / `OLLAMA_MODEL` | `http://localhost:11434` / `llama3` | Local, no key needed |
-| `OPENAI_API_KEY` / `OPENAI_MODEL` | — / `gpt-4` | |
+| `NVIDIA_API_KEY` | Yes (for the AI agent) | — |
+| `NVIDIA_MODEL` | No | `nvidia/nemotron-3-super-120b-a12b` |
 
-> The dashboard's visual sections work without any key. Only the AI agent needs one.
+> The dashboard's visual sections work without a key. Only the AI agent needs `NVIDIA_API_KEY`.
 
 ### 3. Launch the dashboard
 
@@ -118,4 +110,4 @@ All data is **synthetic** (PHUSE Test Data Factory) and contains no real patient
 
 ## License
 
-[MIT](LICENSE) © 2026 TzuChien (Bruce) Hu
+[MIT](LICENSE) © 2026 Tzu-Chien(Bruce) Chuang
