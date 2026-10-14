@@ -1,0 +1,19 @@
+# Secrets
+.env
+.streamlit/secrets.toml
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Raw SAS transport downloads (CSVs + SQLite DB ARE committed for turnkey use)
+*.xpt
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

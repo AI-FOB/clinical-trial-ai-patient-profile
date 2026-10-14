@@ -1,0 +1,13 @@
+pandas
+requests
+streamlit
+plotly
+langchain
+langchain-community
+sqlalchemy
+langchain-ollama
+langchain-openai
+langchain-groq
+langchain-nvidia-ai-endpoints
+python-dotenv
+tabulate
